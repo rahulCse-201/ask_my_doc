@@ -1,0 +1,23 @@
+{
+  "name": "ask-my-docs",
+  "version": "1.0.0",
+  "description": "A Retrieval-Augmented Generation (RAG) system that allows users to upload PDFs and ask questions, returning answers with page-level citations.",
+  "main": "index.js",
+  "scripts": {
+    "start:db": "docker compose -f docker-compose.dev.yml up -d",
+    "stop:db": "docker compose -f docker-compose.dev.yml down",
+    "logs:db": "docker compose -f docker-compose.dev.yml logs -f"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahulCse-201/ask_my_doc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rahulCse-201/ask_my_doc/issues"
+  },
+  "homepage": "https://github.com/rahulCse-201/ask_my_doc#readme"
+}
