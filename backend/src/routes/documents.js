@@ -41,7 +41,8 @@ r.post("/upload", requireAuth, upload.single("pdf"), async (req, res, next) => {
 
     // pdf-parse v2 exposes a parser class rather than a callable function.
     // PDFParse is class so create object and pass data,
-    const parser = new PDFParse({ data: req.file.buffer });
+    // here we passing the buffer to pdf-parse to parse the pdf file and get the text from it 
+    const parser = new PDFParse({ data: req.file.buffer }); // here we get a instance/object of PDFParse , not get text yet, this is just a instance so that can work with file buffer and get the text from it 
     let parsed;
     let pageCount;
     try {
@@ -77,6 +78,8 @@ r.post("/upload", requireAuth, upload.single("pdf"), async (req, res, next) => {
         page: page.num,
       })),
     );
+
+    // if chunking failed then in db for file status update to failed and return error to user
     if (!chunks.length) {
       await Document.findByIdAndUpdate(doc._id, { status: "failed" });
       return res
@@ -88,6 +91,7 @@ r.post("/upload", requireAuth, upload.single("pdf"), async (req, res, next) => {
       `📄 Parsed ${req.file.originalname}: found ${chunks.length} chunks.`,
     );
 
+    // here chunk convert to vector and store in qdrant with payload of userId, docId, filename, page, text
     const vectors = await embedBatch(chunks.map((chunk) => chunk.text));
     await qdrant.upsert(COLLECTION, {
       wait: true,

@@ -48,7 +48,7 @@ function App() {
           />
           <Route 
             path="/chat" 
-            element={user ? <Chat onLogout={logout} logoutError={logoutError} /> : <Navigate to="/" />} 
+            element={user ? <Chat user={user} onLogout={logout} logoutError={logoutError} /> : <Navigate to="/" />} 
           />
         </Routes>}
       </div>
