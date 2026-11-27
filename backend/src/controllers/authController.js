@@ -2,12 +2,23 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const cookieOpts = {
+const cookieSameSite = process.env.COOKIE_SAME_SITE || "lax";
+const cookieSecure = process.env.NODE_ENV === "production" || cookieSameSite === "none";
+
+const cookieBaseOpts = {
   httpOnly: true,
-  sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
+  sameSite: cookieSameSite,
+  secure: cookieSecure,
+};
+
+const cookieOpts = {
+  ...cookieBaseOpts,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
+
+function clearAuthCookie(res) {
+  res.clearCookie("token", cookieBaseOpts);
+}
 
 function normalizedEmail(value) {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
@@ -63,14 +74,15 @@ export async function login(req, res, next) {
 }
 
 export function logout(req, res) {
-  res.clearCookie("token", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" }).json({ ok: true });
+  clearAuthCookie(res);
+  res.json({ ok: true });
 }
 
 export async function currentUser(req, res, next) {
   try {
     const user = await User.findById(req.user.id).select("email");
     if (!user) {
-      res.clearCookie("token", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" });
+      clearAuthCookie(res);
       return res.status(401).json({ error: "Not authenticated" });
     }
     return res.json(publicUser(user));
