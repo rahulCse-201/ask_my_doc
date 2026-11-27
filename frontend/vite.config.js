@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     server: {
       proxy: {
-        '/api': env.VITE_API_PROXY || 'http://localhost:5000',
+        '/api': {
+          target: env.VITE_API_PROXY || 'http://localhost:5000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
       },
     },
   }
