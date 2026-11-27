@@ -25,9 +25,9 @@ import { ensureCollection } from "./services/qdrantService.js";
 
 
 
-app.use("/api/auth", authRoutes);
-app.use("/api/documents", documentRoutes)
-app.use("/api/query", queryRoutes);
+app.use("/auth", authRoutes);
+app.use("/documents", documentRoutes)
+app.use("/query", queryRoutes);
 
 app.use((err, req, res, _next) => {
   const status = err.name === "MulterError" ? (err.code === "LIMIT_FILE_SIZE" ? 413 : 400) : (err.status || 500);
