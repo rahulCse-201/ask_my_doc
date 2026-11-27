@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const cookieSameSite = process.env.COOKIE_SAME_SITE || "lax";
+const cookieSameSite = process.env.COOKIE_SAME_SITE || "none";
 const cookieSecure = process.env.NODE_ENV === "production" || cookieSameSite === "none";
 
 const cookieBaseOpts = {
